@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open New Tab with Encrypted URL</title>
+    <script>
+        function openNewTab() {
+            // Define email and token dynamically
+            // const email = "mandeep.tamang@dissertationindia.net"; 
+            // const token = "23b2680ebd17899575e46e8c959f7b0b938a809f1663eef644e2bb67ea053ef6"; 
+
+            const email = "puneet@redmarkediting.com"; 
+            const token = "a5da8f28ce0f084665e25a7d36901403a6d6c081a3d28f1f0bf95c9720328bf0"; 
+            
+            // Construct the URL
+            const url = `http://localhost:3000/${encodeURIComponent(email)}/${token}`;
+            
+            // Open the URL in a new tab
+            window.open(url, "_blank");
+        }
+    </script>
+</head>
+<body>
+    <button onclick="openNewTab()">Open New Tab</button>
+</body>
+</html>
