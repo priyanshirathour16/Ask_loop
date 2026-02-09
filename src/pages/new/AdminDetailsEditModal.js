@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { X, GripVertical } from "lucide-react";
+import { X, GripVertical, Edit3 } from "lucide-react";
 import React, { useEffect, useMemo, useState, useRef } from "react";
 import { toast } from "react-toastify";
 
@@ -36,6 +36,7 @@ const AdminDetailsEditModal = ({ info, onClose, onSave }) => {
   }, [info]);
 
   const [form, setForm] = useState(initial);
+  const [editingParams, setEditingParams] = useState({});
 
   const LoopUserData = localStorage.getItem("loopuser");
 
@@ -472,8 +473,8 @@ const AdminDetailsEditModal = ({ info, onClose, onSave }) => {
                         Milestone {mIdx + 1}
                       </strong>
                     </div>
-                    <div className="grid grid-cols-3 gap-2 mt-2">
-                      <div>
+                    <div className="grid grid-cols-6 gap-2 mt-2">
+                      <div className="col-span-4">
                         <label className="block text-sm text-slate-700 text-[11px]">
                           Name
                         </label>
@@ -485,7 +486,7 @@ const AdminDetailsEditModal = ({ info, onClose, onSave }) => {
                           }
                         />
                       </div>
-                      <div>
+                      <div className="col-span-1">
                         <label className="block text-sm text-slate-700 text-[11px]">
                           % (0-100)
                         </label>
@@ -498,7 +499,7 @@ const AdminDetailsEditModal = ({ info, onClose, onSave }) => {
                           placeholder="%"
                         />
                       </div>
-                      <div>
+                      <div className="col-span-1">
                         <label className="block text-sm text-slate-700 text-[11px]">
                           Price
                         </label>
@@ -525,9 +526,34 @@ const AdminDetailsEditModal = ({ info, onClose, onSave }) => {
                     })()}
                     <div className="mt-2">
                       <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium text-slate-700 text-[11px]">
-                          Parameters
-                        </span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-medium text-slate-700 text-[11px]">
+                            Parameters
+                          </span>
+                          <button
+                            className="p-1 hover:bg-slate-200 rounded transition"
+                            onClick={() =>
+                              setEditingParams((prev) => ({
+                                ...prev,
+                                [mIdx]: !prev[mIdx],
+                              }))
+                            }
+                            title={
+                              editingParams[mIdx]
+                                ? "Disable editing"
+                                : "Enable editing"
+                            }
+                          >
+                            <Edit3
+                              size={12}
+                              className={
+                                editingParams[mIdx]
+                                  ? "text-indigo-600"
+                                  : "text-slate-400"
+                              }
+                            />
+                          </button>
+                        </div>
                         <button
                           className="btn btn-sm btn-secondary rounded-md shadow hover:shadow-md hover:opacity-90 transition px-2 py-1 text-[11px]"
                           onClick={() => addParameter(mIdx)}
@@ -537,89 +563,139 @@ const AdminDetailsEditModal = ({ info, onClose, onSave }) => {
                       </div>
                       <div className="space-y-2 mt-2">
                         {Array.isArray(m.parametersData) &&
-                          m.parametersData.map((p, pIdx) => (
-                            <div
-                              key={pIdx}
-                              className="flex gap-2 items-center"
-                              draggable
-                              onDragStart={(e) => (dragItem.current = pIdx)}
-                              onDragEnter={(e) => (dragOverItem.current = pIdx)}
-                              onDragEnd={() => handleSortParameter(mIdx)}
-                              onDragOver={(e) => e.preventDefault()}
-                            >
-                              <div className="cursor-move text-gray-400 hover:text-gray-600">
-                                <GripVertical size={16} />
-                              </div>
-                              <div className="flex-1">
-                                <label className="block text-sm text-slate-700 text-[11px]">
-                                  Parameter
-                                </label>
-                                <textarea
-                                  className="form-control rounded-md border border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition px-2 py-1 text-[11px] resize-y min-h-[30px]"
-                                  rows={1}
-                                  value={p.parameters}
-                                  onChange={(e) =>
-                                    updateParameter(
-                                      mIdx,
-                                      pIdx,
-                                      "parameters",
-                                      e.target.value,
-                                    )
-                                  }
-                                  style={{ overflow: "hidden" }}
-                                  onInput={(e) => {
-                                    e.target.style.height = "auto";
-                                    e.target.style.height =
-                                      e.target.scrollHeight + "px";
-                                  }}
-                                />
-                              </div>
-                              <div className="w-32">
-                                <label className="block text-sm text-slate-700 text-[11px]">
-                                  No. of Words
-                                </label>
-                                <input
-                                  className="form-control rounded-md border border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition px-2 py-1 text-[11px]"
-                                  value={p.no_of_words}
-                                  onChange={(e) =>
-                                    updateParameter(
-                                      mIdx,
-                                      pIdx,
-                                      "no_of_words",
-                                      e.target.value,
-                                    )
-                                  }
-                                />
-                              </div>
-                              <div className="w-32">
-                                <label className="block text-sm text-slate-700 text-[11px]">
-                                  Time Frame
-                                </label>
-                                <input
-                                  className="form-control rounded-md border border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition px-2 py-1 text-[11px]"
-                                  value={p.time_frame}
-                                  onChange={(e) =>
-                                    updateParameter(
-                                      mIdx,
-                                      pIdx,
-                                      "time_frame",
-                                      e.target.value,
-                                    )
-                                  }
-                                />
-                              </div>
-                              {pIdx > 0 && (
-                                <div>
-                                  <button
-                                    className="btn btn-sm btn-outline-danger rounded-md hover:shadow-sm transition px-2 py-1 text-[11px]"
-                                    onClick={() => removeParameter(mIdx, pIdx)}
-                                  >
-                                    -
-                                  </button>
+                          m.parametersData
+                            .filter((p) => p != null)
+                            .map((p, pIdx) => (
+                              <div
+                                key={pIdx}
+                                className="flex gap-2 items-start"
+                                draggable
+                                onDragStart={(e) => (dragItem.current = pIdx)}
+                                onDragEnter={(e) =>
+                                  (dragOverItem.current = pIdx)
+                                }
+                                onDragEnd={() => handleSortParameter(mIdx)}
+                                onDragOver={(e) => e.preventDefault()}
+                              >
+                                <div className="cursor-move text-gray-400 hover:text-gray-600 mt-6">
+                                  <GripVertical size={16} />
                                 </div>
-                              )}
-                            </div>
-                          ))}
+                                <div className="flex-1 min-w-0">
+                                  <label className="block text-sm text-slate-700 text-[11px]">
+                                    Parameter
+                                  </label>
+                                  {editingParams[mIdx] ? (
+                                    <textarea
+                                      className="form-control rounded-md border border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition px-2 py-1 text-[11px] resize-y min-h-[30px] w-full"
+                                      rows={1}
+                                      value={p?.parameters || ""}
+                                      onChange={(e) =>
+                                        updateParameter(
+                                          mIdx,
+                                          pIdx,
+                                          "parameters",
+                                          e.target.value,
+                                        )
+                                      }
+                                      style={{ overflow: "hidden" }}
+                                      onInput={(e) => {
+                                        e.target.style.height = "auto";
+                                        e.target.style.height =
+                                          e.target.scrollHeight + "px";
+                                      }}
+                                    />
+                                  ) : (
+                                    <div
+                                      className="form-control rounded-md border border-slate-200 bg-slate-50 px-2 py-1 text-[11px] min-h-[30px] text-slate-600 break-words whitespace-pre-wrap"
+                                      style={{
+                                        minHeight:
+                                          p?.parameters?.length > 50
+                                            ? "auto"
+                                            : "30px",
+                                        height: "auto",
+                                      }}
+                                    >
+                                      {p?.parameters ||
+                                        "No parameter specified"}
+                                    </div>
+                                  )}
+                                </div>
+                                <div
+                                  className="flex-shrink-0"
+                                  style={{
+                                    minWidth:
+                                      p?.no_of_words?.length > 10
+                                        ? "140px"
+                                        : "120px",
+                                  }}
+                                >
+                                  <label className="block text-sm text-slate-700 text-[11px]">
+                                    No. of Words
+                                  </label>
+                                  {editingParams[mIdx] ? (
+                                    <input
+                                      className="form-control rounded-md border border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition px-2 py-1 text-[11px] w-full"
+                                      value={p?.no_of_words || ""}
+                                      onChange={(e) =>
+                                        updateParameter(
+                                          mIdx,
+                                          pIdx,
+                                          "no_of_words",
+                                          e.target.value,
+                                        )
+                                      }
+                                    />
+                                  ) : (
+                                    <div className="form-control rounded-md border border-slate-200 bg-slate-50 px-2 py-1 text-[11px] text-slate-600 break-words">
+                                      {p?.no_of_words || "N/A"}
+                                    </div>
+                                  )}
+                                </div>
+                                <div
+                                  className="flex-shrink-0"
+                                  style={{
+                                    minWidth:
+                                      p?.time_frame?.length > 10
+                                        ? "140px"
+                                        : "120px",
+                                  }}
+                                >
+                                  <label className="block text-sm text-slate-700 text-[11px]">
+                                    Time Frame
+                                  </label>
+                                  {editingParams[mIdx] ? (
+                                    <input
+                                      className="form-control rounded-md border border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition px-2 py-1 text-[11px] w-full"
+                                      value={p?.time_frame || ""}
+                                      onChange={(e) =>
+                                        updateParameter(
+                                          mIdx,
+                                          pIdx,
+                                          "time_frame",
+                                          e.target.value,
+                                        )
+                                      }
+                                    />
+                                  ) : (
+                                    <div className="form-control rounded-md border border-slate-200 bg-slate-50 px-2 py-1 text-[11px] text-slate-600 break-words">
+                                      {p?.time_frame || "N/A"}
+                                    </div>
+                                  )}
+                                </div>
+                                {pIdx > 0 && (
+                                  <div className="flex-shrink-0 mt-6">
+                                    <button
+                                      className="btn btn-sm btn-outline-danger rounded-md hover:shadow-sm transition px-2 py-1 text-[11px]"
+                                      onClick={() =>
+                                        removeParameter(mIdx, pIdx)
+                                      }
+                                    >
+                                      -
+                                    </button>
+                                  </div>
+                                )}
+                              </div>
+                            ))}
                       </div>
                     </div>
                   </div>

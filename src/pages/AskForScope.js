@@ -949,6 +949,17 @@ const AskForScope = ({
                             >
                               <Copy size={14} className="text-blue-600" />
                             </button>
+                            {quote.is_discounted == 1 && (
+                              <span
+                                className="text-green-600 bg-green-100 rounded-full text-sm ml-2"
+                                style={{
+                                  fontSize: "11px",
+                                  padding: "1px 6px",
+                                }}
+                              >
+                                Discounted
+                              </span>
+                            )}
                           </div>
                         </td>
 

@@ -51,6 +51,7 @@ const AddNewRequest = ({
 
   const [internalCommentsOpen, setInternalCommentsOpen] = useState(false);
   const [internalComments, setInternalComments] = useState("");
+  const [isDiscounted, setIsDiscounted] = useState(false);
 
   const [submitting, setSubmitting] = useState(false);
 
@@ -862,6 +863,7 @@ This quote and service scope shall serve as the definitive and conclusive list o
       selectedUser: isfeasability == 1 ? selectedUser : "",
       selectedPlans: [...selectedPlans],
       recommendedPlan,
+      isDiscounted,
       plans: selectedPlans.map((p) => ({
         plan: p,
         ...planDetails[p],
@@ -909,6 +911,7 @@ This quote and service scope shall serve as the definitive and conclusive list o
     formData.append("selectedPlans", selectedPlans);
     formData.append("recommendedPlan", recommendedPlan);
     formData.append("internal_comments", internalComments);
+    formData.append("isDiscounted", isDiscounted);
     const plansArray = selectedPlans.map((p) => ({
       plan: p,
       ...planDetails[p],
@@ -1932,6 +1935,25 @@ This quote and service scope shall serve as the definitive and conclusive list o
           </div>
         )}
         <div className="col-span-2 mt-4 pt-4 border-t border-gray-100">
+          {/* Is Discounted Checkbox */}
+          <div className="mb-4">
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                id="isDiscounted"
+                checked={isDiscounted}
+                onChange={(e) => setIsDiscounted(e.target.checked)}
+                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+              />
+              <label
+                htmlFor="isDiscounted"
+                className="ml-2 pt-2 f-12 font-medium text-gray-700"
+              >
+                Is Discounted
+              </label>
+            </div>
+          </div>
+
           <div
             className="flex items-center cursor-pointer select-none group w-fit"
             onClick={() => setInternalCommentsOpen(!internalCommentsOpen)}
