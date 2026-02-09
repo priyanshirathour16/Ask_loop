@@ -993,15 +993,15 @@ const AskForScope = ({
                                 </span>
                               )
                             ) : quote.feasability_status == "Completed" &&
-                              quote.quote_status == "1" ? (
-                              <span className="text-green-700">
-                                Feasabilty Completed and Admin Submitted
-                              </span>
-                            ) : quote.feasability_status == "Completed" &&
                               quote.quote_status == "1" &&
                               quote.ops_approved == "0" ? (
                               <span className="text-green-700">
                                 Feasabilty Completed and OPS Approval Pending
+                              </span>
+                            ) : quote.feasability_status == "Completed" &&
+                              quote.quote_status == "1" ? (
+                              <span className="text-green-700">
+                                Feasabilty Completed and Admin Submitted
                               </span>
                             ) : (
                               <p>
