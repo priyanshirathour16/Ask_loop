@@ -642,6 +642,15 @@ const DetailsComponent = ({
                   </div>
                 </p>
 
+                <p className=" mb-3">
+                  <div>
+                    <strong>Website Name</strong>{" "}
+                  </div>
+                  <div className="line-h-in">
+                    {queryInfo?.website_name || "No website name"}
+                  </div>
+                </p>
+
                 {quote.quote_heading && (
                   <p className="mb-3">
                     <div>
