@@ -75,6 +75,18 @@ This quote and service scope shall serve as the definitive and conclusive list o
 
 This quote and service scope shall serve as the definitive and conclusive list of deliverables from our end. Any prior communications, whether via email, WhatsApp, phone call, Zoom, or any other medium, as well as any previously sent or discussed service scopes, are hereby rendered null and void.`;
 
+  const phdRemarks = `1. Our service for PhD Application shall be completed upon details and documents provided from your side as needed for applications as per respective University norms.
+2. Payment for the service is to be made in advance.
+3. For developing Statement of Purpose (SOP) and Research Research (If included in the service scope), we shall organise a zoom call with the subject matter expert to understand your research idea and interest.
+4. All the information that you shall share with us shall remain confidential.
+5. The specific services (e.g., SOP drafting, university shortlisting, interview prep) are listed in the above "Scope of Work" or within the main body of the quotation. Services are strictly limited to what is explicitly stated therein.FiveVidya provides consulting, guidance, and editorial support. We do not guarantee admission, scholarship, or visa approval. The final application submission and its outcomes are solely the Client's responsibility.We do not write application components from scratch without Client input; our process is collaborative and requires timely information and feedback from the Client.
+6. FiveVidya will work according to the timeline outlined in the proposal, contingent on the Client's prompt provision of information and feedback.Delays caused by the Client will result in a corresponding shift in the delivery schedule. FiveVidya is not liable for missed application deadlines due to Client delays.
+7. The Client agrees to:
+Provide accurate, complete, and truthful information about their academic background, research experience, and goals.
+Adhere to all agreed-upon deadlines for providing information, drafts, and feedback.
+Inform FiveVidya of specific university guidelines, word limits, and application deadlines.
+Make the final decision on all content submitted. FiveVidya's role is advisory.`;
+
   const [planDetails, setPlanDetails] = useState({
     Basic: {
       price: "",
@@ -84,7 +96,7 @@ This quote and service scope shall serve as the definitive and conclusive list o
       milestones: "",
       milestoneData: [],
       remarks: "",
-      tandc: bRemarks,
+      tandc: selectedServices == 101 ? phdRemarks : bRemarks,
     },
     Standard: {
       price: "",
@@ -94,7 +106,7 @@ This quote and service scope shall serve as the definitive and conclusive list o
       milestones: "",
       milestoneData: [],
       remarks: "",
-      tandc: sRemarks,
+      tandc: selectedServices == 101 ? phdRemarks : sRemarks,
     },
     Advanced: {
       price: "",
@@ -104,7 +116,7 @@ This quote and service scope shall serve as the definitive and conclusive list o
       milestones: "",
       milestoneData: [],
       remarks: "",
-      tandc: aRemarks,
+      tandc: selectedServices == 101 ? phdRemarks : aRemarks,
     },
   });
 
@@ -410,6 +422,7 @@ This quote and service scope shall serve as the definitive and conclusive list o
   }));
 
   const handleServiceChange = (val) => {
+    console.log("Selected service:", val);
     if (!val) {
       setSelectedServices([]);
       setSuggestedTags([]);
@@ -435,6 +448,31 @@ This quote and service scope shall serve as the definitive and conclusive list o
     setSelectedServices([val.value]);
     setSuggestedTags(tags);
     setServicePlanLock(allowedPlans);
+
+    // Check if the selected service is PhD Application Support
+    console.log("Checking service:", val?.label, "ID:", val?.value);
+    if (val?.label === "PhD Application Support" || val?.value === 101) {
+      console.log(
+        "PhD Application Support selected - updating T&C for all plans",
+        val,
+      );
+      // Update terms and conditions for all plans when PhD Application Support is selected
+      setPlanDetails((prev) => ({
+        ...prev,
+        Basic: { ...prev.Basic, tandc: phdRemarks },
+        Standard: { ...prev.Standard, tandc: phdRemarks },
+        Advanced: { ...prev.Advanced, tandc: phdRemarks },
+      }));
+    } else {
+      console.log("Other service selected - reverting to default T&C");
+      // Revert to default terms for other services
+      setPlanDetails((prev) => ({
+        ...prev,
+        Basic: { ...prev.Basic, tandc: bRemarks },
+        Standard: { ...prev.Standard, tandc: sRemarks },
+        Advanced: { ...prev.Advanced, tandc: aRemarks },
+      }));
+    }
 
     if (allowedPlans && allowedPlans.length > 0) {
       // Enforce only allowed plans are selected
@@ -1890,10 +1928,10 @@ This quote and service scope shall serve as the definitive and conclusive list o
                 theme="snow"
                 value={planDetails[plan].tandc}
                 onChange={(value) =>
-                  setPlanDetails({
-                    ...planDetails,
-                    [plan]: { ...planDetails[plan], tandc: value },
-                  })
+                  setPlanDetails((prev) => ({
+                    ...prev,
+                    [plan]: { ...prev[plan], tandc: value },
+                  }))
                 }
                 className="mt-1 rounded border border-gray-300 bg-gray-50 f-12"
                 modules={modules}
