@@ -1080,6 +1080,10 @@ const ManageQuery = ({ sharelinkrefid, sharelinkquoteid }) => {
       width: "20x",
       orderable: false,
       className: "text-center",
+      render: function (data, type, row) {
+        // Handle cases where id might be null/undefined
+        return data || row.ref_id || "N/A";
+      },
     },
     {
       title: "Client Name",
@@ -1113,13 +1117,13 @@ const ManageQuery = ({ sharelinkrefid, sharelinkquoteid }) => {
     },
     {
       title: "Currency",
-      data: "null",
+      data: null,
       orderable: false,
       render: function (data, type, row) {
         if (row.currency == "Other") {
-          return row.other_currency;
+          return row.other_currency || "N/A";
         } else {
-          return row.currency;
+          return row.currency || "N/A";
         }
       },
     },
@@ -1245,8 +1249,10 @@ const ManageQuery = ({ sharelinkrefid, sharelinkquoteid }) => {
       data: "created_date",
       orderable: true,
       render: (data, type, row) => {
-        if (data) {
-          const date = new Date(data * 1000);
+        // Handle cases where created_date might be null/undefined or doesn't exist
+        const timestamp = data || row.created_date;
+        if (timestamp) {
+          const date = new Date(timestamp * 1000);
           const day = date.getDate().toString().padStart(2, "0"); // Ensures two-digit day
           const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Ensures two-digit month
           const year = date.getFullYear().toString(); // Gets year
@@ -1262,7 +1268,8 @@ const ManageQuery = ({ sharelinkrefid, sharelinkquoteid }) => {
       // Sort based on the UNIX timestamp for correct ordering
       createdCell: (cell, cellData, rowData, row, col, table) => {
         // This is just in case you want to keep the original timestamp for sorting purposes
-        $(cell).attr("data-sort", cellData);
+        const timestamp = cellData || rowData.created_date;
+        $(cell).attr("data-sort", timestamp || 0);
       },
     },
 

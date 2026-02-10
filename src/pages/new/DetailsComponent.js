@@ -87,7 +87,10 @@ const DetailsComponent = ({
   const [selectedForEdit, setSelectedForEdit] = useState(null);
   const [editing, setEditing] = useState(false);
 
+  console.log("selectedPlans", standardInfo, basicInfo, advancedInfo, quote);
+
   const renderPlanCard = (label, info, isRecommended) => {
+    console.log("info ", info);
     if (!info) return null;
     const hasMilestones =
       Array.isArray(info.milestoneData) && info.milestoneData.length > 0;
@@ -150,9 +153,11 @@ const DetailsComponent = ({
               <strong>No. of Milestones:</strong> {info.milestones}
             </p>
           ) : null}
-          {info.noOfWords != null && info.noOfWords !== "" ? (
+          {(info.noOfWords != null || info.no_of_words != null) &&
+          (info.noOfWords !== "" || info.no_of_words !== "") ? (
             <p>
-              <strong>No. of Words:</strong> {info.noOfWords}
+              <strong>No. of Words:</strong>{" "}
+              {info.noOfWords || info.no_of_words}
             </p>
           ) : null}
           {hasMilestones ? (

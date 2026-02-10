@@ -1064,21 +1064,24 @@ const AskForScope = ({
                               )}
                             </button>
 
-                            {(quote.isfeasability == 1 &&
+                            {/* { */}
+                            {/* quote.isfeasability == 1 &&
                               quote.feasability_status == "Pending") ||
-                            quote.quote_status == 0 ? (
-                              <button
-                                onClick={() => {
-                                  toggleEditForm(quote.quoteid, quote.q_type);
-                                }}
-                                data-tooltip-id="my-tooltip"
-                                data-tooltip-content="Edit"
-                                disabled={tlType && tlType == 2}
-                                className="flex items-center justify-center btn btn-warning btn-sm mr-1"
-                              >
-                                <Pen size={14} className="text-white" />
-                              </button>
-                            ) : null}
+                            quote.quote_status == 1 ?  */}
+
+                            <button
+                              onClick={() => {
+                                toggleEditForm(quote.quoteid, quote.q_type);
+                              }}
+                              data-tooltip-id="my-tooltip"
+                              data-tooltip-content="Edit"
+                              disabled={tlType && tlType == 2}
+                              className="flex items-center justify-center btn btn-warning btn-sm mr-1"
+                            >
+                              <Pen size={14} className="text-white" />
+                            </button>
+
+                            {/* } */}
 
                             <button
                               disabled={tlType && tlType == 2 && tagAccess != 1}

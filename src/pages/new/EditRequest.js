@@ -271,6 +271,7 @@ This quote and service scope shall serve as the definitive and conclusive list o
                 milestones: standardInfo.milestones || "",
                 milestoneData: milestoneData,
                 remarks: standardInfo.remarks || "",
+                noOfWords: standardInfo.noOfWords || "",
                 tandc: standardInfo.tandc || "",
               },
             }));
@@ -298,6 +299,7 @@ This quote and service scope shall serve as the definitive and conclusive list o
                 milestones: advancedInfo.milestones || "",
                 milestoneData: milestoneData,
                 remarks: advancedInfo.remarks || "",
+                noOfWords: advancedInfo.noOfWords || "",
                 tandc: advancedInfo.tandc || "",
               },
             }));
@@ -945,7 +947,7 @@ This quote and service scope shall serve as the definitive and conclusive list o
               }`}
               onClick={() => setIsFeasability(0)}
             >
-              Ask For Scope{" "}
+              Ask For Scope wjhewkjfhejkgfejf
               {isfeasability == 0 && (
                 <CheckCircle2 size={18} className="ml-2 text-green-700" />
               )}

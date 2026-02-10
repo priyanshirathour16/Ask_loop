@@ -13,6 +13,7 @@ const AdminDetailsEditModal = ({ info, onClose, onSave }) => {
       price: parsed.price ?? "",
       currency: parsed.currency ?? "",
       otherCurrency: parsed.otherCurrency ?? "",
+      noOfWords: parsed.noOfWords ?? "",
       milestones:
         parsed.milestones ??
         (Array.isArray(parsed.milestoneData) ? parsed.milestoneData.length : 0),
@@ -69,6 +70,7 @@ const AdminDetailsEditModal = ({ info, onClose, onSave }) => {
         price: form.price,
         currency: form.currency,
         otherCurrency: form.otherCurrency,
+        noOfWords: form.noOfWords,
         milestones: Number(form.milestones) || 0,
         milestoneData: form.milestoneData,
         remarks: form.remarks,
@@ -382,7 +384,7 @@ const AdminDetailsEditModal = ({ info, onClose, onSave }) => {
         </div>
         <div className="flex-1 overflow-y-auto p-6">
           <div className="grid grid-cols-1 gap-4">
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-4 gap-3">
               <div>
                 <label className="block text-sm font-medium text-slate-700 text-[11px]">
                   Price
@@ -436,6 +438,31 @@ const AdminDetailsEditModal = ({ info, onClose, onSave }) => {
                   />
                 </div>
               )}
+              <div>
+                <label className="block text-sm font-medium text-slate-700 text-[11px]">
+                  No of Words
+                </label>
+                <input
+                  className="form-control rounded-md border border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition px-2 py-1 text-[11px]"
+                  value={form.noOfWords}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    // Allow numbers and commas for large numbers
+                    if (/^[0-9,]*$/.test(value)) {
+                      updateField("noOfWords", value);
+                    }
+                  }}
+                  onPaste={(e) => {
+                    e.preventDefault();
+                    const paste = (
+                      e.clipboardData || window.clipboardData
+                    ).getData("text");
+                    const numbers = paste.replace(/[^0-9,]/g, "");
+                    updateField("noOfWords", numbers);
+                  }}
+                  placeholder="Enter no of words"
+                />
+              </div>
             </div>
 
             <div>
