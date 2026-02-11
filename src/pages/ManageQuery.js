@@ -139,22 +139,31 @@ const ManageQuery = ({ sharelinkrefid, sharelinkquoteid }) => {
     try {
       setStatsLoading(load);
       const res = await fetch(
-        "https://loopback-skci.onrender.com/api/scope/getDailyStatistics",
+        "https://loopback-skci.onrender.com/api/scope/getDailyQuoteApprovals",
         {
-          method: "GET",
+          method: "POST",
           headers: {
             "Content-type": "application/json",
           },
-        },
+          body: JSON.stringify({
+            user_id: loopUserObject.id,
+          }),
+        }
       );
       const data = await res.json();
       if (data.status) {
-        // Convert array → object for easier access
-        const statsObj = data.data.reduce((acc, cur) => {
-          acc[cur.day] = cur;
-          return acc;
-        }, {});
-        setStats(statsObj);
+        setStats({
+          today: {
+            day: "today",
+            submitted: data.data.today,
+            submitted_quote_ids: data.data.today_quote_ids,
+          },
+          yesterday: {
+            day: "yesterday",
+            submitted: data.data.yesterday,
+            submitted_quote_ids: data.data.yesterday_quote_ids,
+          },
+        });
         setLastUpdated(new Date().toLocaleTimeString());
       }
     } catch (e) {
@@ -167,6 +176,10 @@ const ManageQuery = ({ sharelinkrefid, sharelinkquoteid }) => {
   // Call fetchStats once when component mounts
   useEffect(() => {
     fetchStats();
+    const interval = setInterval(() => {
+      fetchStats(false);
+    }, 5000);
+    return () => clearInterval(interval);
   }, []);
 
   const fetchUsers = async () => {
@@ -370,7 +383,7 @@ const ManageQuery = ({ sharelinkrefid, sharelinkquoteid }) => {
       );
       const data = await response.json();
       if (data.status) setTags(data.data || []);
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useEffect(() => {
@@ -828,10 +841,10 @@ const ManageQuery = ({ sharelinkrefid, sharelinkquoteid }) => {
       if (data.isfeasability == 0) {
         toast(
           data.fld_first_name +
-            " Submitted a request Quote " +
-            data.id +
-            " for refId " +
-            data.ref_id,
+          " Submitted a request Quote " +
+          data.id +
+          " for refId " +
+          data.ref_id,
           {
             icon: "💡",
           },
@@ -839,10 +852,10 @@ const ManageQuery = ({ sharelinkrefid, sharelinkquoteid }) => {
       } else if (data.isfeasability == 1) {
         toast(
           data.fld_first_name +
-            " Created Feasibility request Quote " +
-            data.id +
-            " for refId " +
-            data.ref_id,
+          " Created Feasibility request Quote " +
+          data.id +
+          " for refId " +
+          data.ref_id,
           {
             icon: "❓❗",
           },
@@ -872,10 +885,10 @@ const ManageQuery = ({ sharelinkrefid, sharelinkquoteid }) => {
     socket.on("updateQuery", (data) => {
       toast(
         data.user_name +
-          " Submitted a request Quote " +
-          data.quote_id +
-          " for refId " +
-          data.ref_id,
+        " Submitted a request Quote " +
+        data.quote_id +
+        " for refId " +
+        data.ref_id,
         {
           icon: "💡",
         },
@@ -1623,7 +1636,7 @@ const ManageQuery = ({ sharelinkrefid, sharelinkquoteid }) => {
                 multiple
                 value={selectedSubjectArea}
                 ref={selectSubjectRef}
-                //onChange={(e) => setSelectedSubjectArea(e.target.value)}
+              //onChange={(e) => setSelectedSubjectArea(e.target.value)}
               >
                 <option value="Accounting">Accounting</option>
                 <option value="Accounts Law">Accounts Law</option>
@@ -1848,7 +1861,7 @@ const ManageQuery = ({ sharelinkrefid, sharelinkquoteid }) => {
                 className="form-control form-control-sm"
                 value={status}
                 ref={selectStatusRef}
-                //onChange={(e) => setStatus(e.target.value)}
+              //onChange={(e) => setStatus(e.target.value)}
               >
                 <option value="PendingAtUser">Pending at User</option>
                 <option value="PendingAtAdmin">Pending at Admin</option>
@@ -1976,31 +1989,28 @@ const ManageQuery = ({ sharelinkrefid, sharelinkquoteid }) => {
             <div className="flex space-x-4">
               <button
                 onClick={() => handleTabClick("all")}
-                className={`px-3 py-1 rounded-md text-sm font-medium transition-colors duration-200 ease-in-out ${
-                  activeTab === "all"
-                    ? "bg-blue-500 text-white border border-blue-600"
-                    : "bg-white text-gray-700 border border-gray-300 hover:bg-blue-50"
-                }`}
+                className={`px-3 py-1 rounded-md text-sm font-medium transition-colors duration-200 ease-in-out ${activeTab === "all"
+                  ? "bg-blue-500 text-white border border-blue-600"
+                  : "bg-white text-gray-700 border border-gray-300 hover:bg-blue-50"
+                  }`}
               >
                 All Quotes
               </button>
               <button
                 onClick={() => handleTabClick("pendingUser")}
-                className={`px-3 py-1 rounded-md text-sm font-medium transition-colors duration-200 ease-in-out ${
-                  activeTab === "pendingUser"
-                    ? "bg-blue-500 text-white border border-blue-600"
-                    : "bg-white text-gray-700 border border-gray-300 hover:bg-blue-50"
-                }`}
+                className={`px-3 py-1 rounded-md text-sm font-medium transition-colors duration-200 ease-in-out ${activeTab === "pendingUser"
+                  ? "bg-blue-500 text-white border border-blue-600"
+                  : "bg-white text-gray-700 border border-gray-300 hover:bg-blue-50"
+                  }`}
               >
                 Pending at User
               </button>
               <button
                 onClick={() => handleTabClick("pendingAdmin")}
-                className={`px-3 py-1 rounded-md text-sm font-medium transition-colors duration-200 ease-in-out ${
-                  activeTab === "pendingAdmin"
-                    ? "bg-blue-500 text-white border border-blue-600"
-                    : "bg-white text-gray-700 border border-gray-300 hover:bg-blue-50"
-                }`}
+                className={`px-3 py-1 rounded-md text-sm font-medium transition-colors duration-200 ease-in-out ${activeTab === "pendingAdmin"
+                  ? "bg-blue-500 text-white border border-blue-600"
+                  : "bg-white text-gray-700 border border-gray-300 hover:bg-blue-50"
+                  }`}
               >
                 Pending at Admin
               </button>
